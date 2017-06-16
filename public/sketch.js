@@ -34,27 +34,26 @@ var screenWidth = 320, // px
 var FOV = 60, // degrees
     resolution = 2, // pixels per strip
     numberOfRays = screenWidth / resolution;
-    
+
 
 function setup() {
-  createCanvas(1000, 600);  
+  createCanvas(1000, 600);
   minimap = new Minimap(0, 0, 10);
   player = new Player(150, 170);
 }
 
 function draw() {
+  noStroke();
   background(255);
-  stroke(0);
   fill(255);
   rect(320,0,320,240);
 
   fill(0);
-  noStroke();
   rect(320,0,320,120);
   fill(200);
   rect(320,120,320,120);
-  
-  
+
+
   minimap.draw();
   //minimap.drawGrid();
   castRays();
@@ -62,7 +61,7 @@ function draw() {
   //castSingleRay(player.dir);
   player.update();
   player.draw();
-  
+
 
 }
 
@@ -73,20 +72,20 @@ function castRays() {
   stroke(0);
 
   for(var i = 0; i < numberOfRays; i++) {
-    
+
     // make sure angle is between 0 and 2PI rads
     var newAngle = initialAngle + (radianStep * i);
     if(newAngle < 0) newAngle = (2 * PI) + newAngle;
     var distance = castSingleRay(newAngle);
     stroke("#FFF1A7");
     line(player.x, player.y, player.x + distance[0] * cos(newAngle), player.y + distance[0] * sin(newAngle));
-    
+
     // render
-    
+
     //console.log(distance);
     var z = (distance[0]/10);
     var z = z * cos(player.dir - newAngle);
-    
+
     var wallHeight = 240/z;
     //console.log(wallHeight);
     if(wallHeight > 240) wallHeight = 240;
@@ -94,7 +93,7 @@ function castRays() {
     //if(wallHeight < -240) wallHeight = -240;
     //console.log("distance: " + distance + ", z: " + z + ", wall: " + wallHeight);
     //console.log(distance);
-    
+
     fill("#01A1A1");
     stroke("#01A1A1");
     if(distance[1] == 0 || distance[1] == 1) {
@@ -102,20 +101,20 @@ function castRays() {
           stroke("#016666");
     }
     rect(320 + i * resolution, 120-(0.5 * wallHeight), resolution, wallHeight);
-    
-    
-    
-    
+
+
+
+
   }
 }
 
 function castSingleRay(angle) {
-  
+
   // Moving right/left? up/down? Determined by
   // which quadrant the angle is in
-  var right = angle > (3 * PI / 2) || (angle >= 0 && angle < PI / 2); 
+  var right = angle > (3 * PI / 2) || (angle >= 0 && angle < PI / 2);
   var up = angle > PI && angle < 2 * PI;
-  
+
   // HORIZONTAL WALL COLLISIONS
   /*var horizontalDistance = horizontalCollision(up, angle);
   console.log(horizontalDistance);
@@ -123,71 +122,71 @@ function castSingleRay(angle) {
   line(player.x, player.y, player.x + horizontalDistance * cos(angle), player.y + horizontalDistance * sin(angle));*/
   var hCol = horizontalCollision(up, angle);
   var vCol = verticalCollision(right, angle);
-  
+
   //console.log("(" + hCol + ", " + vCol + ")");
-  
+
   //console.log("hCol: " + hCol + ", vCol: " + vCol);
-  
+
   return (hCol[0] < vCol[0]) ? hCol : vCol;
 }
 
 function horizontalCollision(up, angle) {
-  
+
   var x = floor(player.gridX);
   var y = up ? floor(player.gridY) : floor(player.gridY) + 1;
 
   var aY = y * minimap.scale;
   var aX = player.x - (player.y - aY) / tan(angle);
-    
+
   var dX = minimap.scale / tan(angle);
   var dY = minimap.scale;
 
   var distance = [1000, 0]; // arbitrary large number
   var i = 0;
-  
+
   // moving up
   if(up) {
-    
+
     // while inside the map
     while((aY - i * dY) >= minimap.y) {
-      
+
       // cordinate positions
       var posX = aX - i * dX;
       var posY = aY - i * dY;
-      
+
       // grid positions
       var gX = floor(posX / minimap.scale);
       var gY = (posY/ minimap.scale) - 1;
-      
+
       //fill(0, 0, 255);
       //ellipse(posX, posY, 4);
       if((gX < mapWidth) && (gY >= 0) && worldMap[gY][gX] != 0) {
         //fill(0,255,0);
         //rect(gX * 20, gY * 20, 20, 20);
                 //ellipse(posX, posY, 4);
-        distance = [dist(player.x, player.y, posX, posY), 0]; 
+        distance = [dist(player.x, player.y, posX, posY), 0];
         break;
       }
       i++;
-    }  
+    }
     // moving down
   } else {
-    
+
     while((aY + i * dY) <= minimap.y + mapHeight * minimap.scale) {
-      
+
       var posX = aX + i * dX;
       var posY = aY + i * dY;
-      
+
       var gX = floor(posX / minimap.scale);
       var gY = (posY)/ minimap.scale;
-      
+
       //fill(0, 0, 255);
       //ellipse(posX, posY, 4);
       if((gX < mapWidth) && (gY >= 0) && worldMap[gY][gX] != 0) {
         //fill(0,255,255);
         //rect(gX * 20, gY * 20, 20, 20);
                 //ellipse(posX, posY, 4);
-        distance = [dist(player.x, player.y, posX, posY), 1]; 
+        distance = [dist(player.x, player.y, posX, posY), 1];
 
         break;
       }
@@ -195,12 +194,12 @@ function horizontalCollision(up, angle) {
     }
   }
   return distance;
-        
+
   //line(player.x, player.y, player.x + 100 * cos(angle), player.y + 100 * sin(angle));
 }
 
 function verticalCollision(right, angle) {
-  
+
   var x = right ? floor(player.gridX) + 1: floor(player.gridX);
   var y = floor(player.gridY);
 
@@ -208,66 +207,66 @@ function verticalCollision(right, angle) {
   var aY = player.y + (aX - player.x) * tan(angle);
 
 
-  
+
   var dY = minimap.scale * tan(angle);
   var dX = minimap.scale;
 
   var distance = [1000, 0]; // arbitrary large number
   var i = 0;
-  
+
     fill(255, 0, 255);
 
   // moving right
   if(right) {
-    
+
     // while inside the map
     while((aX + i * dX) <= minimap.x + mapWidth * minimap.scale) {
-      
+
       // cordinate positions
       var posX = aX + i * dX;
       var posY = aY + i * dY;
-      
+
       // grid positions
       var gX = posX / minimap.scale;
       var gY = floor(posY/ minimap.scale);
-      
+
       //fill(0,255,0);
       //rect(gX*20,gY*20,20,20);
-      
+
       //ellipse(posX, posY, 4);
-      
+
       //fill(0, 0, 255);
       //ellipse(posX, posY, 4);
       if((gX < mapWidth) && (gY >= 0) && (gY < mapHeight) && worldMap[gY][gX] != 0) {
         //fill(0,255,0);
         //rect(gX * 20, gY * 20, 20, 20);
                 //ellipse(posX, posY, 4);
-        distance = [dist(player.x, player.y, posX, posY), 2]; 
+        distance = [dist(player.x, player.y, posX, posY), 2];
         break;
       }
       i++;
     }
   } else {
-    
+
     // while inside the map
     while((aX - i * dX) >= minimap.x) {
-      
+
       // cordinate positions
       var posX = aX - i * dX;
       var posY = aY - i * dY;
-      
+
       // grid positions
       var gX = (posX / minimap.scale) - 1;
       var gY = floor(posY/ minimap.scale);
-      
+
       //ellipse(posX, posY, 4);
-      
+
       //fill(0, 0, 255);
       //ellipse(posX, posY, 4);
       if((gX >= 0) && (gY >= 0) && (gY < mapHeight) && worldMap[gY][gX] != 0) {
         //fill(0,255,0);
         //rect(gX * 20, gY * 20, 20, 20);
-        distance = [dist(player.x, player.y, posX, posY), 3]; 
+        distance = [dist(player.x, player.y, posX, posY), 3];
         //ellipse(posX, posY, 4);
         break;
       }
@@ -280,20 +279,20 @@ function verticalCollision(right, angle) {
 function Player(x, y) {
   this.x = x + minimap.x;
   this.y = y + minimap.y;
-  
+
   this.gridX = this.x / minimap.scale;
   this.gridY = this.y / minimap.scale;
-  
+
   this.dir = 0; // angle
-  
+
   this.rot = 0;
   this.speed = 0;
-  
+
   this.moveSpeed = 0.5;
   this.rotSpeed = 2.5 * PI/180;
-  
+
   this.radius = 4;
-  
+
   this.draw = function() {
     var squareSize = (2 * this.radius) * (2 * this.radius);
     squareSize /= 2;
@@ -308,25 +307,25 @@ function Player(x, y) {
     //ellipse(this.x, this.y, this.radius * 2);
     //line(this.x, this.y, this.x + 100 * cos(this.dir), this.y + 100 * sin(this.dir));
   }
-  
+
   this.update = function() {
-    
+
     // so player angle is always between 0 and 2PI rads
     this.dir += (this.rot > 0) ? this.rot * this.rotSpeed : 2 * PI + this.rot * this.rotSpeed;
     this.dir %= 2 * PI;
-    
+
     newX = this.x + this.speed * this.moveSpeed * cos(this.dir);
     newY = this.y + this.speed * this.moveSpeed * sin(this.dir);
-    
+
     if(!this.collision(newX, newY)) {
       this.x = newX;
       this.y = newY;
     }
-    
+
     this.gridX = this.x / minimap.scale;
     this.gridY = this.y / minimap.scale;
   }
-  
+
   this.collision = function(newX, newY) {
     if(newX - this.radius < minimap.x ||
        newX + this.radius > minimap.x + mapWidth * minimap.scale ||
@@ -342,12 +341,12 @@ function Minimap(x, y, scale) {
   this.x = x;
   this.y = y;
   this.scale = scale; // in pixels
-  
+
   this.draw = function() {
     fill(255);
     noStroke();
     rect(this.x, this.y, mapWidth * this.scale, mapHeight * this.scale);
-    
+
     fill(200);
     for(y = 0; y < mapHeight; y++) {
       for(x = 0; x < mapWidth; x++) {
@@ -357,7 +356,7 @@ function Minimap(x, y, scale) {
       }
     }
   }
-  
+
   this.drawGrid = function() {
     stroke(0);
     for(x = 0; x <= mapWidth; x++) {
@@ -387,4 +386,3 @@ window.addEventListener("keydown", function(e) {
         e.preventDefault();
     }
 }, false);
-

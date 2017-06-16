@@ -1,0 +1,14 @@
+{
+  "name": "javascript-ray-casting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aruvham/javascript-ray-casting.git"
+  },
+  "author": "Arturo Ruvalcaba",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
