@@ -204,7 +204,7 @@ function Player(x, y) {
   this.dir = 0; // angle
   this.rot = 0;
   this.speed = 0;
-  this.moveSpeed = 0.5;
+  this.moveSpeed = 1;
   this.rotSpeed = 2.5 * PI/180;
   this.radius = 4;
 
