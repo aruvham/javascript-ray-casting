@@ -1,4 +1,5 @@
 // Ray Casting
+// aruvham
 
 var worldMap = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -32,12 +33,12 @@ var screenWidth = 320, // px
     screenHeight = 240;// px
 
 var FOV = 60, // degrees
-    resolution = 2, // pixels per strip
+    resolution = 2, // px
     numberOfRays = screenWidth / resolution;
 
 
 function setup() {
-  createCanvas(1000, 600);
+  createCanvas(640, 240);
   minimap = new Minimap(0, 0, 10);
   player = new Player(150, 170);
 }
@@ -47,22 +48,15 @@ function draw() {
   background(255);
   fill(255);
   rect(320,0,320,240);
-
   fill(0);
   rect(320,0,320,120);
   fill(200);
   rect(320,120,320,120);
 
-
   minimap.draw();
-  //minimap.drawGrid();
   castRays();
-
-  //castSingleRay(player.dir);
   player.update();
   player.draw();
-
-
 }
 
 function castRays() {
@@ -381,7 +375,6 @@ function keyReleased() {
 }
 
 window.addEventListener("keydown", function(e) {
-    // space and arrow keys
     if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
     }
