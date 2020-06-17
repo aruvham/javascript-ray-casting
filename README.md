@@ -23,13 +23,6 @@ For a more in depth explanation of the calculations involved, I recommend the fo
   <img src="https://dl.dropboxusercontent.com/s/v6bp0tq16sqnikk/ray_03.png?dl=0" alt="d3-mini-game gameplay screenshot" />
 </h3>
 
-Future
-------
-
-* [ ] add the ability to jump and crouch
-* [ ] map editor
-* [ ] shadows and textures
-
 <!---
 Link References
 -->
