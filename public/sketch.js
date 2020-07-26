@@ -52,6 +52,7 @@ function draw() {
   fill(200);
   rect(320,120,320,120);
 
+  checkMouseMovement();
   minimap.draw();
   castRays();
   player.update();
@@ -277,15 +278,25 @@ function Minimap(x, y, scale) {
   }
 }
 
+function checkMouseMovement() {
+  if(mouseX < pmouseX) {
+    player.rot = -1;
+  } else if(mouseX > pmouseX) {
+    player.rot = 1;
+  } else if(mouseX == pmouseX) {
+    player.rot = 0;
+  }
+}
+
 function keyPressed() {
-  if(keyCode == UP_ARROW) player.speed = 1;
-  if(keyCode == DOWN_ARROW) player.speed = -1;
+  if(keyCode == UP_ARROW || key === 'W') player.speed = 1;
+  if(keyCode == DOWN_ARROW || key === 'S') player.speed = -1;
   if(keyCode == LEFT_ARROW) player.rot = -1;
   if(keyCode == RIGHT_ARROW) player.rot = 1;
 }
 
 function keyReleased() {
-  if(keyCode == UP_ARROW || keyCode == DOWN_ARROW) player.speed = 0;
+  if(keyCode == UP_ARROW || keyCode == DOWN_ARROW || key === 'W' || key === 'S') player.speed = 0;
   if(keyCode == LEFT_ARROW || keyCode == RIGHT_ARROW) player.rot = 0;
 }
 
